@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Music Video Generator</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+        <link rel="stylesheet" href="{{ url_for('static',filename='css/index.css') }}">
+        <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<!--         <script src="https://cdn.jsdelivr.net/npm/vue@2.6.8/dist/vue.min.js"></script>
+ -->        
+    </head>
+    <body>
+        <div class="navbar-fixed">
+            <nav>
+                <div class="nav-wrapper red row">
+                    <a href="#" class="brand-logo hide-on-med-and-down"><img src="{{ url_for('static',filename='images/youtubemvgenerator_logo.png') }}" height="100%" alt=""></a>
+                    <ul class="right table-of-contents">
+                        <li><a href="#introduction" class="white-text">Upload</a></li>
+                        <li><a href="#gallery" class="white-text">Gallery</a></li>
+<!--                         <li><a href="#method" class="white-text">Method</a></li>
+                        <li><a href="#experiments" class="white-text">Experiments</a></li>
+                        <li><a href="#about" class="white-text">About</a></li>
+ -->                    </ul>
+                </div>
+            </nav>
+        </div>
+        <div id="app">
+            <div id="introduction" class="scrollspy">
+                <div class="parallax-container valign-wrapper">
+                    <div class="parallax"><img src="{{ url_for('static',filename='images/music_video.jpg') }}" /></div>
+                    <div class="container center-align" style="height: 80%; background-color:rgba(0, 0, 0, 0.6)">
+                        <h3 class="white-text">Generate a Music Video for your music !</h3>
+                        <p class="white-text">Our AI algorithm will use segments of real Youtube MVs to match your music.</p>
+                        <p class="white-text">This works better with famous musics like pop, rock, hip-hop ...</p>
+                        <p class="white-text" style="font-style: italic">Disclaimer : the generated video might contain segments of explicit content. Viewer discretion is advised. </p>
+                        
+                        <p class="white-text">Chose now your music !</p>
+                        <!-- <form method="post" enctype="multipart/form-data"> -->
+                        <input type="file" class="white-text btn-large" name='music' id="upload_file" />
+                        <button class="btn waves-effect waves-light btn-large" id="upload_btn" name="action">上传
+                            <i class="material-icons right">Upload</i>
+                        </button>
+                        <!-- </form> -->
+                        <br>
+<!--                         <em class="white-text">-  already count MVs generated  -</em>
+ --><!--                         <p class="red-text">error</p>
+ -->                    </div>
+                      <!-- Modal Structure -->
+                    <div id="modal-generate-info" class="modal">
+                        <div class="modal-content center-align">
+                            <h5>Your music video is being generated...</h5>
+                            <h6>If this takes more than 3 minutes, try reloading the page.</h6>
+                            <br>
+                            <p>modal</p>
+                            <div class="preloader-wrapper big active">
+                                <div class="spinner-layer spinner-red-only">
+                                    <div class="circle-clipper left">
+                                        <div class="circle"></div>
+                                    </div><div class="gap-patch">
+                                        <div class="circle"></div>
+                                    </div><div class="circle-clipper right">
+                                        <div class="circle"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <a href="#!" class="modal-close waves-effect waves-red btn-flat" >Cancel</a>
+                        </div>
+                    </div>
+
+                    <div id="modal-genre" class="modal">
+                        <div class="modal-content center-align">
+                            <h5>Select a genre</h5>
+                            <p>Our algorithm could not find your music genre. Please try with another music or select here a genre.</p>
+
+                            <div class="container">
+                                <div class="input-field col s12">
+                                <select id="select-genre">
+                                  <option value="" disabled selected>Choose your option</option>
+                                  <option value="rock">Rock / Alternative / Metal</option>
+                                  <option value="hiphop">Hip-Hop / R&B / Rap</option>
+                                  <option value="electro">Electronic / Dance / Techno / House</option>
+                                  <option value="pop">Pop / Indie</option>
+                                </select>
+                                <label>Select genre</label>
+                            </div>
+                            </div>
+                            <br>
+
+                            <p>This step is important for matching videos consistent with your music.</p>
+                            <br>
+                            <em>Our algorithm works better with musics of the previous genres, since it relies on a database made of MVs of these genres !</em>
+                        </div>
+                        <div class="modal-footer">
+                            <a href="#!" class="modal-close waves-effect waves-green btn-flat" >OK</a>
+                            <a href="#!" class="modal-close waves-effect waves-red btn-flat">Cancel</a>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+    
+            <div id="gallery" class="section scrollspy black">
+                <div class="container">
+                    <h3 class="white-text center-align">Gallery</h3>
+                    <br>
+                    
+                        <div class="row valign-wrapper">
+                            <div class="col s1"><a id="prev" class="white-text btn-floating btn-large waves-effect waves-light grey darken-2" >⯇</a></div>
+                            <div class="col s10">
+                                <div class="carousel carousel-slider center" id="gallery-carousel">
+                                    {%for video, name in videos%}
+                                    <div class="carousel-item black white-text" href="#one!">
+                                            <video width="640" height="360" controls>
+                                                    <source src="{{url_for('static', filename=video) }}" type="video/mp4">
+                                            </video> 
+                                            <p class="white-text">{{name}}</p>
+                                    </div>
+                                    {%endfor%}
+<!--                                     <div class="carousel-item black white-text" href="#one!">
+                                            <video width="640" height="360" controls>
+                                                    <source src="http://ml.cs.tsinghua.edu.cn/~sarah/experiments/vid_518.mp4" type="video/mp4">
+                                            </video> 
+                                            <p class="white-text"> Flipo - Doh Tell Meh Dat</p>
+                                    </div>
+                                    <div class="carousel-item black white-text" href="#one!">
+                                            <video width="640" height="360" controls>
+                                                    <source src="http://ml.cs.tsinghua.edu.cn/~sarah/experiments/vid_019.mp4" type="video/mp4">
+                                            </video> 
+                                            <p class="white-text"> Rae Sremmurd - Throw Sum Mo</p>
+                                    </div>
+                                    <div class="carousel-item black white-text" href="#one!">
+                                            <video width="640" height="360" controls>
+                                                    <source src="http://ml.cs.tsinghua.edu.cn/~sarah/experiments/vid_199.mp4" type="video/mp4">
+                                            </video> 
+                                            <p class="white-text"> Ariana Grande - Everyday</p>
+                                    </div>
+                                    <div class="carousel-item black white-text" href="#one!">
+                                            <video width="640" height="360" controls>
+                                                    <source src="http://ml.cs.tsinghua.edu.cn/~sarah/experiments/vid_215.mp4" type="video/mp4">
+                                            </video>
+                                            <p class="white-text"> Gnarls Barkley - Crazy</p>
+                                    </div>
+                                    <div class="carousel-item black white-text" href="#one!">
+                                        <video width="640" height="360" controls>
+                                                <source src="http://ml.cs.tsinghua.edu.cn/~sarah/experiments/vid_166.mp4" type="video/mp4">
+                                        </video>
+                                        <p class="white-text"> Limp Bizkit - Ready to go</p>
+                                    </div>
+                                    <div class="carousel-item black white-text" href="#one!">
+                                        <video width="640" height="360" controls>
+                                                <source src="http://ml.cs.tsinghua.edu.cn/~sarah/experiments/vid_184.mp4" type="video/mp4">
+                                        </video>
+                                        <p class="white-text"> Florence + The Machine - Spectrum (Say my name)</p>
+                                    </div>
+                                    <div class="carousel-item black white-text" href="#one!">
+                                        <video width="640" height="360" controls>
+                                                <source src="http://ml.cs.tsinghua.edu.cn/~sarah/experiments/vid_914.mp4" type="video/mp4">
+                                        </video>
+                                        <p class="white-text"> Estelle ft. Kanye West - American Boy</p>
+                                    </div>
+                                    <div class="carousel-item black white-text" href="#one!">
+                                        <video width="640" height="360" controls>
+                                                <source src="http://ml.cs.tsinghua.edu.cn/~sarah/experiments/vid_481.mp4" type="video/mp4">
+                                        </video>
+                                        <p class="white-text"> Rock N Roll Soldiers - Flag Song</p>
+                                    </div>
+                                    <div class="carousel-item black white-text" href="#one!">
+                                        <video width="640" height="360" controls>
+                                                <source src="http://ml.cs.tsinghua.edu.cn/~sarah/experiments/vid_813.mp4" type="video/mp4">
+                                        </video>
+                                        <p class="white-text"> Lil Uzi Vert - Seven Million (feat. Future)</p>
+                                    </div>
+                                    <div class="carousel-item black white-text" href="#one!">
+                                            <video width="640" height="360" controls>
+                                                    <source src="assets/mv_nelly_getlikeme.mp4" type="video/mp4">
+                                            </video> 
+                                            <p class="white-text"> Nelly - Get Like Me</p>
+                                    </div>
+                                    <div class="carousel-item black white-text" href="#one!">
+                                            <video width="640" height="360" controls>
+                                                    <source src="assets/mv_feilunhai_superhot.mp4" type="video/mp4">
+                                            </video> 
+                                            <p class="white-text"> Feilunhai - Super Hot</p>
+                                    </div> -->
+                                </div>
+                            </div>
+                            <div class="col s1"><a id="next" class="white-text btn-floating btn-large waves-effect waves-light grey darken-2" >⯈</a></div>
+                        </div>
+        
+                </div>
+            </div>
+        </div>
+<div id="chatback" style="display: none;position: absolute;top: 0%; left:0%; width:100%; height:1100px; background-color:black; z-index:1;-moz-opacity: 0.7; opacity:0.7;"></div>
+<!--     <div id='pop_window' style="display: none; position: absolute;top:25%;left:25%;border:3px solid #ccc;background:white;z-index: 2;width: 600px; height: 260px; padding: 20px;">
+-->
+        <div class="progress" style="display: none; position: absolute;top:30%;left:35%;background:white;z-index: 2;">
+            <div></div>
+        </div>
+        <img id="now" style="display: none; position: absolute;top:30%;left:35%; z-index: 4;" src="{{url_for('static', filename='images/now.gif')}}" />
+        <div class="white-text" id="info" style="display: none; position: absolute;top:35%;left:45%;z-index: 3;">
+            <h2>完成后自动刷新页面</h2>
+        </div>
+    <!-- </div> -->
+        <script type="text/javascript">
+
+            function uploadFile() {
+                //获取上传的文件
+                var uploadFile = $('#upload_file')[0].files[0];
+                console.log(uploadFile)
+
+                var formdata = new FormData();
+
+                formdata.append('music', uploadFile);
+                $.ajax({
+                    url: '/',
+                    type: 'post',
+                    async:true,
+                    dataType: 'json',
+                    processData: false,
+                    contentType: false,
+                    data: formdata,
+                    xhr: function() {
+                        var xhr = new XMLHttpRequest();
+                        //使用XMLHttpRequest.upload监听上传过程，注册progress事件，打印回调函数中的event事件
+                        xhr.upload.addEventListener('progress', function (e) {
+                            // console.log(e);
+                            //loaded代表上传了多少
+                            //total代表总数为多少
+                            var progressRate = (e.loaded / e.total) * 100 + '%';
+
+                            //通过设置进度条的宽度达到效果
+                            $('.progress > div').css('width', progressRate);
+                        })
+                        // $('.progress').css('display', 'none');
+                        // $('#chatback').css('display', 'none');
+
+                        return xhr;
+                    },
+                    success: function (data) {
+                        $('.progress').css('display', 'none');
+                        $('#info').css('display', 'none');
+                        // $('#chatback').css('display', 'none');
+                        $('.progress > div').css('width', 0);
+                        // window.location.reload();
+                        // alert(data);
+                        if (data["status"] == 0) {
+                            alert(data["info"] + "\n上传失败！");
+                            $('#chatback').css('display', 'none');
+                        }else{
+                            $('#now').css('display', 'block');
+                            $.ajax({
+                                url: "/gen?music_file=" + data["music_file"],
+                                dataType: "json",
+                                success: function(data){
+                                    if (data["status"]==0){
+                                        alert("生成mv失败");
+                                        $('#chatback').css('display', 'none');
+                                        $('#now').css('display', 'none');
+                                    }else{
+                                        window.location.reload();
+                                    };
+                                },
+                                error: function(xhr, type){
+                                    alert("ajax Error!");
+                                    $('#chatback').css('display', 'none');
+                                    $('#now').css('display', 'none');
+                                },
+                            });
+
+                        };
+                    },
+                })
+            };
+
+            $(document).ready(function(){
+              $('.parallax').parallax();
+              $('.carousel').carousel();
+              $('body').on('click','#prev',  function(){$('.carousel').carousel('prev');});
+              $('body').on('click','#next',  function(){$('.carousel').carousel('next');});
+              $('body').on('click', '#upload_btn', function(){
+                $('.progress').css('display', 'block');
+                $('#info').css('display', 'block');
+                $('#chatback').css('display', 'block');
+                uploadFile();
+                });
+            });
+
+        </script>
+        <!-- <script src="index.js"></script> -->
+    </body>
+</html>
