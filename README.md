@@ -1,4 +1,4 @@
-# MVgenerator_web
+# MVGenerator_web
 
 ## 1. 配置环境
 
