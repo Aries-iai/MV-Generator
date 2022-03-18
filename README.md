@@ -61,7 +61,7 @@ python mvgen/feature_color.py ./data
 ```shell
 python app.py
 ```
-在http://127.0.0.1:5000/网页上点击选择文件，选择硬盘内的任意mp3，再点击上传，等待一分钟左右即会生成视频。
+在http://127.0.0.1:5000/ 网页上点击选择文件，选择硬盘内的任意mp3，再点击上传，等待一分钟左右即会生成视频。
 生成的视频在`static/videos`中，网页端的gallery也会显示生成的视频。
 
 
