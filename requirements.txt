@@ -1,0 +1,22 @@
+# you may need torch 
+# conda install pytorch torchvision torchaudio cudatoolkit=11.3 -c pytorch
+
+scipy==1.2
+librosa
+# opencv-python
+scenedetect[opencv-headless]
+msaf
+
+# following link may fail due to network issue 
+git+https://github.com/acrcloud/acrcloud_sdk_python 
+# if it fails, you can install acrcloud python sdk alternatively with shell scripts:
+#       git clone https://github.com/acrcloud/acrcloud_sdk_python
+#       cd acrcloud_sdk_python/
+#       python setup.py install
+
+# ffmpeg needed to be installed with shell scripts:
+#       sudo apt-get install ffmpeg
+
+# suggested libs
+# youtune-dl - video download lib
+# music-dl - https://github.com/0xHJK/music-dl - audio download lib 
