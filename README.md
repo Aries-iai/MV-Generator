@@ -1,17 +1,6 @@
 # MV Generator
 
 ## 1. 配置环境
-
-### 环境
-* *Python 3.7*
-* ffmpeg
-
-### Packages: 
-* scipy 1.2
-* librosa
-* scenedetect[opencv-headless]
-* msaf
-
 可使用以下命令下载以上依赖：
 ```shell
 sudo apt-get install ffmpeg
